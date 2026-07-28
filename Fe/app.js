@@ -131,6 +131,17 @@ function startTicketLoop() {
 
 startTicketLoop();
 
+/* ============================ COFFEE CUP (mobile tap) ============================ */
+
+// Hover handles desktop; on touch devices we toggle the same active state on tap.
+const coffeeCup = document.getElementById("coffee-cup");
+
+if (coffeeCup) {
+  coffeeCup.addEventListener("click", () => {
+    coffeeCup.classList.toggle("is-active");
+  });
+}
+
 /* ============================ BOOKING ============================ */
 
 const bookingForm = document.getElementById("booking-form");

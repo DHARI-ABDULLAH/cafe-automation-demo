@@ -6,10 +6,12 @@
 
 :root {
   /* Warm café palette */
+  --green: #16382b;
   --green-deep: #16382b;
   --green-mid: #1f4a39;
   --green-soft: #2c5c48;
   --cream: #faf4e8;
+  --paper: #faf4e8;
   --cream-dark: #f1e6d2;
   --saffron: #e3a02f;
   --saffron-soft: #f4c56b;
@@ -238,6 +240,27 @@ a {
   gap: 0.9rem;
 }
 
+/* ---------- Hero visual (ticket + cup) ---------- */
+
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.ticket-wrap,
+.cup3d-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 340px;
+}
+
 /* ---------- Live order ticket ---------- */
 
 .ticket-wrap {
@@ -303,6 +326,147 @@ a {
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+/* ---------- 3D coffee cup (Three.js) ---------- */
+
+.cup3d-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+#cup3d {
+  width: min(240px, 88vw);
+  height: min(240px, 88vw);
+  cursor: pointer;
+  touch-action: manipulation;
+  /* Full canvas is the tap target for wobble + steam */
+  -webkit-tap-highlight-color: transparent;
+}
+
+#cup3d canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* WebGL active: hide SVG fallback */
+.hero-visual.cup3d-active .coffee-cup-fallback {
+  display: none;
+}
+
+/* WebGL unavailable: hide empty 3D container */
+.cup3d-wrap.cup3d-fallback-only #cup3d {
+  display: none;
+}
+
+@media (min-width: 600px) and (max-width: 1024px) {
+  #cup3d {
+    width: min(300px, 42vw);
+    height: min(300px, 42vw);
+  }
+}
+
+@media (min-width: 1025px) {
+  #cup3d {
+    width: min(320px, 100%);
+    height: min(320px, 100%);
+  }
+}
+
+/* ---------- Coffee cup SVG fallback ---------- */
+
+.coffee-cup {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  /* Pivot from saucer so the tilt feels natural */
+  transform-origin: 50% 92%;
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.coffee-cup-svg {
+  width: min(160px, 42vw);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 8px 20px rgba(22, 56, 43, 0.14));
+}
+
+/* SVG fills/strokes wired to the site palette */
+.cup-body {
+  fill: var(--white);
+  stroke: var(--green-deep);
+  stroke-width: 2.5;
+}
+
+.cup-rim {
+  fill: var(--cream-dark);
+  stroke: var(--green-deep);
+  stroke-width: 2;
+}
+
+.cup-coffee {
+  fill: var(--green-mid);
+}
+
+.cup-saucer {
+  fill: var(--cream-dark);
+  stroke: var(--green-deep);
+  stroke-width: 2;
+}
+
+.cup-handle {
+  fill: none;
+  stroke: var(--green-deep);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.cup-label {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  fill: var(--green-deep);
+}
+
+.steam-line {
+  fill: none;
+  stroke: var(--green-soft);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+/* Steam hidden until interaction; cup tilts with a springy ease */
+.coffee-cup:hover,
+.coffee-cup:focus-visible,
+.coffee-cup.is-active {
+  transform: rotate(-8deg);
+}
+
+.coffee-cup:hover .steam-line,
+.coffee-cup:focus-visible .steam-line,
+.coffee-cup.is-active .steam-line {
+  animation: steam-rise 2.2s ease-in-out infinite;
+}
+
+.coffee-cup .steam-line:nth-child(1) { animation-delay: 0s; }
+.coffee-cup .steam-line:nth-child(2) { animation-delay: 0.35s; }
+.coffee-cup .steam-line:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  25% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
 }
 
 /* ---------- Sections ---------- */
@@ -717,6 +881,19 @@ a {
     grid-template-columns: 1.15fr 0.85fr;
   }
 
+  .hero-visual {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .ticket-wrap,
+  .cup3d-wrap {
+    flex: 1 1 0;
+    max-width: none;
+  }
+
   .booking-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -739,6 +916,20 @@ a {
 
   .reveal {
     opacity: 1;
+    transform: none;
+  }
+
+  /* Steam always visible, no rise loop or cup tilt */
+  .coffee-cup,
+  .coffee-cup:hover,
+  .coffee-cup:focus-visible,
+  .coffee-cup.is-active {
+    transform: none;
+  }
+
+  .coffee-cup .steam-line {
+    opacity: 0.45;
+    animation: none !important;
     transform: none;
   }
 }

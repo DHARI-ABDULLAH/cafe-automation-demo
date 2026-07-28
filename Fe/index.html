@@ -50,13 +50,42 @@
           </div>
         </div>
 
-        <!-- Live order ticket: signature element, types itself line by line -->
-        <div class="ticket-wrap" aria-hidden="true">
-          <div class="ticket" id="live-ticket">
-            <div class="ticket-header">
-              <span class="ticket-dot"></span> LIVE — KITCHEN FEED
+        <!-- Hero visual: live ticket + interactive coffee cup illustration -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="ticket-wrap">
+            <div class="ticket" id="live-ticket">
+              <div class="ticket-header">
+                <span class="ticket-dot"></span> LIVE — KITCHEN FEED
+              </div>
+              <pre class="ticket-body" id="ticket-body"></pre>
             </div>
-            <pre class="ticket-body" id="ticket-body"></pre>
+          </div>
+
+          <!-- 3D cup (WebGL) with SVG fallback when unavailable -->
+          <div class="cup3d-wrap">
+            <div
+              id="cup3d"
+              class="cup3d-canvas"
+              role="img"
+              aria-label="Interactive 3D coffee cup — move to tilt, tap for steam"
+            ></div>
+
+            <button type="button" class="coffee-cup coffee-cup-fallback" id="coffee-cup" aria-label="Coffee cup illustration — tap or hover for steam">
+              <svg class="coffee-cup-svg" viewBox="0 0 200 230" role="img" aria-hidden="true">
+                <title>Hayl coffee cup</title>
+                <g class="steam">
+                  <path class="steam-line" d="M88 52 C84 42 92 32 88 22 C84 12 90 4 88 -4" />
+                  <path class="steam-line" d="M100 48 C96 38 104 28 100 18 C96 8 102 0 100 -8" />
+                  <path class="steam-line" d="M112 52 C108 42 116 32 112 22 C108 12 114 4 112 -4" />
+                </g>
+                <ellipse class="cup-saucer" cx="100" cy="208" rx="62" ry="10" />
+                <path class="cup-body" d="M58 88 L52 188 Q50 198 60 200 L140 200 Q150 198 148 188 L142 88 Z" />
+                <path class="cup-rim" d="M54 88 L146 88 Q148 84 144 82 L56 82 Q52 84 54 88 Z" />
+                <ellipse class="cup-coffee" cx="100" cy="92" rx="42" ry="7" />
+                <path class="cup-handle" d="M148 108 Q178 108 178 138 Q178 168 148 168" />
+                <text class="cup-label" x="100" y="148" text-anchor="middle">Hayl</text>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -201,6 +230,8 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="app.js"></script>
+  <script src="cup3d.js"></script>
 </body>
 </html>
