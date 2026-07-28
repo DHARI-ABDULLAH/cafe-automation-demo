@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hayl — Specialty Coffee, Fully Automated</title>
+  <meta name="description" content="Hayl is a specialty café running on automation: chat ordering, instant bookings, and auto WhatsApp confirmations." />
+
+  <!-- Fonts: Fraunces (display) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="logo" aria-label="Hayl — back to top">Hayl<span class="logo-dot">.</span></a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#booking">Booking</a></li>
+          <li><a href="#order">Order</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Specialty coffee · Zero waiting</p>
+          <h1 id="hero-title">Your coffee, ready before you arrive</h1>
+          <p class="hero-sub">
+            Hayl runs on automation. Order through chat, book a table in seconds,
+            and get a WhatsApp confirmation before the espresso is even pulled.
+          </p>
+          <div class="hero-ctas">
+            <a href="#order" class="btn btn-primary">Order via Chat</a>
+            <a href="#booking" class="btn btn-ghost">Book a Table</a>
+          </div>
+        </div>
+
+        <!-- Live order ticket: signature element, types itself line by line -->
+        <div class="ticket-wrap" aria-hidden="true">
+          <div class="ticket" id="live-ticket">
+            <div class="ticket-header">
+              <span class="ticket-dot"></span> LIVE — KITCHEN FEED
+            </div>
+            <pre class="ticket-body" id="ticket-body"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MENU ============ -->
+    <section id="menu" class="section reveal" aria-labelledby="menu-title">
+      <div class="container">
+        <p class="eyebrow">The menu</p>
+        <h2 id="menu-title" class="section-title">Small menu, done properly</h2>
+
+        <!-- Filter chips: JS toggles the active category -->
+        <div class="chips" role="group" aria-label="Filter menu by category">
+          <button class="chip is-active" data-filter="all">All</button>
+          <button class="chip" data-filter="hot">Hot</button>
+          <button class="chip" data-filter="cold">Cold</button>
+          <button class="chip" data-filter="bakery">Bakery</button>
+        </div>
+
+        <div class="menu-grid" id="menu-grid">
+          <!-- Cards rendered by renderMenu() in app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BOOKING ============ -->
+    <section id="booking" class="section section-alt reveal" aria-labelledby="booking-title">
+      <div class="container booking-grid">
+        <div>
+          <p class="eyebrow">Reservations</p>
+          <h2 id="booking-title" class="section-title">Book a table</h2>
+          <p class="section-sub">
+            Submit the form and the system does the rest — your booking lands in our
+            sheet and a WhatsApp confirmation is generated instantly.
+          </p>
+
+          <form id="booking-form" novalidate>
+            <div class="field">
+              <label for="bk-name">Full name</label>
+              <input type="text" id="bk-name" name="name" required autocomplete="name" placeholder="Sarah Miller" />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="bk-guests">Guests</label>
+                <input type="number" id="bk-guests" name="guests" min="1" max="12" value="2" required />
+              </div>
+              <div class="field">
+                <label for="bk-time">Time</label>
+                <input type="time" id="bk-time" name="time" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="bk-email">Email</label>
+              <input type="email" id="bk-email" name="email" required autocomplete="email" placeholder="sarah@example.com" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="bk-submit">Confirm booking</button>
+            <p class="form-error" id="bk-error" role="alert" hidden>Please fill in all fields correctly.</p>
+          </form>
+        </div>
+
+        <!-- Confirmation card + WhatsApp-style preview, revealed after submit -->
+        <div class="booking-result" id="booking-result" aria-live="polite">
+          <div class="booking-placeholder" id="booking-placeholder">
+            <p>Your confirmation will appear here — instantly.</p>
+          </div>
+
+          <div class="confirm-card" id="confirm-card" hidden>
+            <div class="confirm-check">✓</div>
+            <h3>Booking confirmed</h3>
+            <p id="confirm-summary"></p>
+
+            <div class="wa-preview">
+              <div class="wa-header">WhatsApp — auto-sent confirmation</div>
+              <div class="wa-bubble" id="wa-message"></div>
+            </div>
+
+            <p class="confirm-note" id="confirm-note"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CHAT ORDERING ============ -->
+    <section id="order" class="section reveal" aria-labelledby="order-title">
+      <div class="container">
+        <p class="eyebrow">Order via chat</p>
+        <h2 id="order-title" class="section-title">Tap, confirm, done</h2>
+        <p class="section-sub">
+          A scripted ordering flow — pick your items, confirm, and the order is
+          fired to the kitchen automatically.
+        </p>
+
+        <div class="chat-widget">
+          <div class="chat-titlebar">
+            <span class="chat-avatar" aria-hidden="true">H</span>
+            <div>
+              <strong>Hayl Bot</strong>
+              <span class="chat-status">online · replies instantly</span>
+            </div>
+          </div>
+          <div class="chat-log" id="chat-log" aria-live="polite"></div>
+          <div class="chat-options" id="chat-options" role="group" aria-label="Chat reply options"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AUTOMATION STRIP ============ -->
+    <section class="section section-dark reveal" aria-labelledby="auto-title">
+      <div class="container">
+        <p class="eyebrow eyebrow-light">Under the hood</p>
+        <h2 id="auto-title" class="section-title">The café runs itself</h2>
+
+        <div class="auto-grid">
+          <article class="auto-card">
+            <div class="auto-icon" aria-hidden="true">⚡</div>
+            <h3>Instant orders</h3>
+            <p>Chat orders skip the counter and land straight on the kitchen screen — no queue, no mishearing, no lost tickets.</p>
+          </article>
+          <article class="auto-card">
+            <div class="auto-icon" aria-hidden="true">💬</div>
+            <h3>Auto WhatsApp confirmations</h3>
+            <p>Every booking triggers a personalised WhatsApp message within seconds. Guests never wonder if the table is really theirs.</p>
+          </article>
+          <article class="auto-card">
+            <div class="auto-icon" aria-hidden="true">📊</div>
+            <h3>Daily reports</h3>
+            <p>At closing time, sales and booking numbers compile themselves into a report and land in the owner's inbox. Zero admin.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Designed &amp; built by <strong>[MY NAME]</strong> — Python • APIs • AI Automation</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
